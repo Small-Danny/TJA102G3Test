@@ -75,3 +75,5 @@ Thumbs.db
 /test-output/
 /surefire-reports/
 /jacoco.exec
+/gitignore.txt
+hibernate.cfg.xml
