@@ -1,6 +1,6 @@
-package com.tibafit.user.modle;
+package com.tibafit.user.model;
 
-public class user {
+public class User {
 	public static void main(String []args) {
 		System.out.println("HelloGit");
 }
