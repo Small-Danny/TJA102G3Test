@@ -77,3 +77,4 @@ Thumbs.db
 /jacoco.exec
 /gitignore.txt
 hibernate.cfg.xml
+/src/main/webapp/assets/
