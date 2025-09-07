@@ -24,6 +24,35 @@ USE `tja102g3`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '帳號',
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密碼',
+  `account_status` int NOT NULL COMMENT '帳號狀態',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '帳號建立時間',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間',
+  `forgot_password_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '忘記密碼URL',
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '姓名',
+  `nick_name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '暱稱',
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '電話',
+  `profile_picture` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '頭像',
+  `gender` int DEFAULT NULL COMMENT '性別',
+  `height_cm` decimal(5,2) DEFAULT NULL COMMENT '身高(公分)',
+  `weight_kg` decimal(5,2) DEFAULT NULL COMMENT '體重(公斤)',
+  `bmi` decimal(5,2) DEFAULT NULL COMMENT 'BMI',
+  `points_balance` int NOT NULL DEFAULT '0' COMMENT '點數餘額',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者主資料表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `admins`
 --
 
@@ -42,6 +71,21 @@ CREATE TABLE `admins` (
   UNIQUE KEY `account` (`account`),
   CONSTRAINT `admins_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='管理員';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `forum_type`
+--
+
+DROP TABLE IF EXISTS `forum_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `forum_type` (
+  `forum_type_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
+  `forum_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分類名稱',
+  PRIMARY KEY (`forum_type_id`),
+  UNIQUE KEY `forum_type_name` (`forum_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='討論區分類';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,6 +137,36 @@ CREATE TABLE `article_collection` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `report_type`
+--
+
+DROP TABLE IF EXISTS `report_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_type` (
+  `report_type_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
+  `report_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '類型名稱',
+  PRIMARY KEY (`report_type_id`),
+  UNIQUE KEY `report_type_name` (`report_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='檢舉類型表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `report_status`
+--
+
+DROP TABLE IF EXISTS `report_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_status` (
+  `report_status` int NOT NULL COMMENT '處理狀態',
+  `status_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '狀態名稱',
+  PRIMARY KEY (`report_status`),
+  UNIQUE KEY `status_name` (`status_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='檢舉處理狀態表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `article_report`
 --
 
@@ -120,6 +194,28 @@ CREATE TABLE `article_report` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `product_id` int NOT NULL AUTO_INCREMENT COMMENT '商品編號',
+  `product_type` tinyint NOT NULL COMMENT '商品類型(0: 裝備，1:補充劑)',
+  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品名稱',
+  `product_description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品敘述 (含規格)',
+  `product_price` int NOT NULL COMMENT '價格',
+  `stock_quantity` int NOT NULL COMMENT '庫存',
+  `product_picture` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品圖片',
+  `product_status` tinyint NOT NULL COMMENT '商品狀態(0: 下架，1:上架)',
+  `product_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品編號或SKU',
+  PRIMARY KEY (`product_id`),
+  UNIQUE KEY `product_code` (`product_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `cart_item`
 --
 
@@ -137,66 +233,6 @@ CREATE TABLE `cart_item` (
   CONSTRAINT `cart_item_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `cart_item_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='購物車明細';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `custom_sport`
---
-
-DROP TABLE IF EXISTS `custom_sport`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `custom_sport` (
-  `custom_sport_id` int NOT NULL AUTO_INCREMENT COMMENT '自訂義運動ID',
-  `sport_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動名稱',
-  `sport_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動描述',
-  `sport_estimated_calories` int unsigned NOT NULL COMMENT '預估運動消耗熱量',
-  `sport_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動圖片',
-  `sport_data_status` tinyint NOT NULL COMMENT '運動資料狀態',
-  `user_id` int NOT NULL COMMENT '會員ID',
-  PRIMARY KEY (`custom_sport_id`),
-  KEY `fk_custom_sport_user_id` (`user_id`),
-  CONSTRAINT `fk_custom_sport_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者自訂義運動項目表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `forum_type`
---
-
-DROP TABLE IF EXISTS `forum_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `forum_type` (
-  `forum_type_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
-  `forum_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分類名稱',
-  PRIMARY KEY (`forum_type_id`),
-  UNIQUE KEY `forum_type_name` (`forum_type_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='討論區分類';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `order_item`
---
-
-DROP TABLE IF EXISTS `order_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `order_item` (
-  `order_item_id` int NOT NULL AUTO_INCREMENT COMMENT '訂單明細ID',
-  `order_id` int NOT NULL COMMENT '訂單ID',
-  `product_id` int NOT NULL COMMENT '商品ID',
-  `order_item_idquantity` int DEFAULT NULL COMMENT '商品數量',
-  `buy_price` int NOT NULL COMMENT '購買價格',
-  `item_total_price` int NOT NULL COMMENT '總價',
-  `order_item_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '訂單明細代碼',
-  PRIMARY KEY (`order_item_id`),
-  UNIQUE KEY `order_item_code` (`order_item_code`),
-  KEY `order_id` (`order_id`),
-  KEY `product_id` (`product_id`),
-  CONSTRAINT `order_item_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `order_item_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='訂單明細表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,139 +263,44 @@ CREATE TABLE `orders` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `points_log`
+-- Table structure for table `order_item`
 --
 
-DROP TABLE IF EXISTS `points_log`;
+DROP TABLE IF EXISTS `order_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `points_log` (
-  `log_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
-  `user_id` int NOT NULL COMMENT '使用者ID',
-  `transaction_type` tinyint NOT NULL COMMENT '交易類型',
-  `points_amount` int NOT NULL COMMENT '點數數量',
-  `task_id` int DEFAULT NULL COMMENT '關聯任務ID',
-  `order_id` int DEFAULT NULL COMMENT '關聯訂單ID',
-  `transaction_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '交易時間',
-  PRIMARY KEY (`log_id`),
-  KEY `user_id` (`user_id`),
-  KEY `task_id` (`task_id`),
+CREATE TABLE `order_item` (
+  `order_item_id` int NOT NULL AUTO_INCREMENT COMMENT '訂單明細ID',
+  `order_id` int NOT NULL COMMENT '訂單ID',
+  `product_id` int NOT NULL COMMENT '商品ID',
+  `order_item_idquantity` int DEFAULT NULL COMMENT '商品數量',
+  `buy_price` int NOT NULL COMMENT '購買價格',
+  `item_total_price` int NOT NULL COMMENT '總價',
+  `order_item_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '訂單明細代碼',
+  PRIMARY KEY (`order_item_id`),
+  UNIQUE KEY `order_item_code` (`order_item_code`),
   KEY `order_id` (`order_id`),
-  CONSTRAINT `points_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `points_log_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `points_log_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='點數交易紀錄表';
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `order_item_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `order_item_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='訂單明細表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `product`
+-- Table structure for table `task_type`
 --
 
-DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `task_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `product` (
-  `product_id` int NOT NULL AUTO_INCREMENT COMMENT '商品編號',
-  `product_type` tinyint NOT NULL COMMENT '商品類型(0: 裝備，1:補充劑)',
-  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品名稱',
-  `product_description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品敘述 (含規格)',
-  `product_price` int NOT NULL COMMENT '價格',
-  `stock_quantity` int NOT NULL COMMENT '庫存',
-  `product_picture` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品圖片',
-  `product_status` tinyint NOT NULL COMMENT '商品狀態(0: 下架，1:上架)',
-  `product_code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品編號或SKU',
-  PRIMARY KEY (`product_id`),
-  UNIQUE KEY `product_code` (`product_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='商品';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `report_status`
---
-
-DROP TABLE IF EXISTS `report_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `report_status` (
-  `report_status` int NOT NULL COMMENT '處理狀態',
-  `status_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '狀態名稱',
-  PRIMARY KEY (`report_status`),
-  UNIQUE KEY `status_name` (`status_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='檢舉處理狀態表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `report_type`
---
-
-DROP TABLE IF EXISTS `report_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `report_type` (
-  `report_type_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
-  `report_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '類型名稱',
-  PRIMARY KEY (`report_type_id`),
-  UNIQUE KEY `report_type_name` (`report_type_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='檢舉類型表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `sport`
---
-
-DROP TABLE IF EXISTS `sport`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sport` (
-  `sport_id` int NOT NULL AUTO_INCREMENT COMMENT '系統運動項目ID',
-  `sport_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動名稱',
-  `sport_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動描述',
-  `sport_mets` decimal(4,2) NOT NULL COMMENT '運動強度',
-  `sport_estimated_calories` int unsigned NOT NULL COMMENT '預估運動消耗熱量',
-  `sport_level` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動等級',
-  `sport_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動圖片',
-  `sport_data_status` tinyint NOT NULL COMMENT '運動資料狀態',
-  `admin_id` int NOT NULL COMMENT '管理員ID',
-  PRIMARY KEY (`sport_id`),
-  UNIQUE KEY `sport_name` (`sport_name`),
-  KEY `fk_sport_admin_id` (`admin_id`),
-  CONSTRAINT `fk_sport_admin_id` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系統運動項目表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `sport_type`
---
-
-DROP TABLE IF EXISTS `sport_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sport_type` (
-  `sport_type_id` int NOT NULL AUTO_INCREMENT COMMENT '運動分類ID',
-  `sport_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動分類名稱',
-  `sport_type_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動分類圖片',
-  PRIMARY KEY (`sport_type_id`),
-  UNIQUE KEY `sport_type_name` (`sport_type_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='運動分類表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `sport_type_item`
---
-
-DROP TABLE IF EXISTS `sport_type_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sport_type_item` (
-  `sport_type_item_id` int NOT NULL AUTO_INCREMENT COMMENT '運動分類明細ID',
-  `sport_type_id` int NOT NULL COMMENT '運動分類ID',
-  `sport_id` int NOT NULL COMMENT '系統運動項目ID',
-  PRIMARY KEY (`sport_type_item_id`),
-  KEY `fk_sport_type_id` (`sport_type_id`),
-  KEY `fk_sport_type_item_sport_id` (`sport_id`),
-  CONSTRAINT `fk_sport_type_id` FOREIGN KEY (`sport_type_id`) REFERENCES `sport_type` (`sport_type_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_sport_type_item_sport_id` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`sport_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='運動分類明細表';
+CREATE TABLE `task_type` (
+  `task_type_id` int NOT NULL AUTO_INCREMENT COMMENT '任務類型 ID',
+  `task_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任務類型名稱',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間',
+  PRIMARY KEY (`task_type_id`),
+  UNIQUE KEY `task_type_name` (`task_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='任務類型表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -390,6 +331,20 @@ CREATE TABLE `task` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `task_record_status_code`
+--
+
+DROP TABLE IF EXISTS `task_record_status_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `task_record_status_code` (
+  `task_record_status` int NOT NULL COMMENT '任務狀態代碼',
+  `status_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任務狀態名稱',
+  PRIMARY KEY (`task_record_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者任務狀態代碼表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `task_record`
 --
 
@@ -414,63 +369,108 @@ CREATE TABLE `task_record` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `task_record_status_code`
+-- Table structure for table `points_log`
 --
 
-DROP TABLE IF EXISTS `task_record_status_code`;
+DROP TABLE IF EXISTS `points_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `task_record_status_code` (
-  `task_record_status` int NOT NULL COMMENT '任務狀態代碼',
-  `status_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任務狀態名稱',
-  PRIMARY KEY (`task_record_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者任務狀態代碼表';
+CREATE TABLE `points_log` (
+  `log_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
+  `user_id` int NOT NULL COMMENT '使用者ID',
+  `transaction_type` tinyint NOT NULL COMMENT '交易類型',
+  `points_amount` int NOT NULL COMMENT '點數數量',
+  `task_id` int DEFAULT NULL COMMENT '關聯任務ID',
+  `order_id` int DEFAULT NULL COMMENT '關聯訂單ID',
+  `transaction_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '交易時間',
+  PRIMARY KEY (`log_id`),
+  KEY `user_id` (`user_id`),
+  KEY `task_id` (`task_id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `points_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `points_log_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `points_log_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='點數交易紀錄表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `task_type`
+-- Table structure for table `sport_type`
 --
 
-DROP TABLE IF EXISTS `task_type`;
+DROP TABLE IF EXISTS `sport_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `task_type` (
-  `task_type_id` int NOT NULL AUTO_INCREMENT COMMENT '任務類型 ID',
-  `task_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '任務類型名稱',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間',
-  PRIMARY KEY (`task_type_id`),
-  UNIQUE KEY `task_type_name` (`task_type_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='任務類型表';
+CREATE TABLE `sport_type` (
+  `sport_type_id` int NOT NULL AUTO_INCREMENT COMMENT '運動分類ID',
+  `sport_type_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動分類名稱',
+  `sport_type_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動分類圖片',
+  PRIMARY KEY (`sport_type_id`),
+  UNIQUE KEY `sport_type_name` (`sport_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='運動分類表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `sport`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `sport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `user_id` int NOT NULL AUTO_INCREMENT COMMENT '流水號PK',
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '帳號',
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密碼',
-  `account_status` int NOT NULL COMMENT '帳號狀態',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '帳號建立時間',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間',
-  `forgot_password_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '忘記密碼URL',
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
-  `nick_name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '暱稱',
-  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '電話',
-  `profile_picture` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '頭像',
-  `gender` int DEFAULT NULL COMMENT '性別',
-  `height_cm` decimal(5,2) DEFAULT NULL COMMENT '身高(公分)',
-  `weight_kg` decimal(5,2) DEFAULT NULL COMMENT '體重(公斤)',
-  `bmi` decimal(4,2) DEFAULT NULL COMMENT 'BMI',
-  `points_balance` int NOT NULL DEFAULT '0' COMMENT '點數餘額',
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者主資料表';
+CREATE TABLE `sport` (
+  `sport_id` int NOT NULL AUTO_INCREMENT COMMENT '系統運動項目ID',
+  `sport_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動名稱',
+  `sport_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動描述',
+  `sport_mets` decimal(4,2) NOT NULL COMMENT '運動強度',
+  `sport_estimated_calories` int unsigned NOT NULL COMMENT '預估運動消耗熱量',
+  `sport_level` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動等級',
+  `sport_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動圖片',
+  `sport_data_status` tinyint NOT NULL COMMENT '運動資料狀態',
+  `admin_id` int NOT NULL COMMENT '管理員ID',
+  PRIMARY KEY (`sport_id`),
+  UNIQUE KEY `sport_name` (`sport_name`),
+  KEY `fk_sport_admin_id` (`admin_id`),
+  CONSTRAINT `fk_sport_admin_id` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='系統運動項目表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sport_type_item`
+--
+
+DROP TABLE IF EXISTS `sport_type_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sport_type_item` (
+  `sport_type_item_id` int NOT NULL AUTO_INCREMENT COMMENT '運動分類明細ID',
+  `sport_type_id` int NOT NULL COMMENT '運動分類ID',
+  `sport_id` int NOT NULL COMMENT '系統運動項目ID',
+  PRIMARY KEY (`sport_type_item_id`),
+  KEY `fk_sport_type_id` (`sport_type_id`),
+  KEY `fk_sport_type_item_sport_id` (`sport_id`),
+  CONSTRAINT `fk_sport_type_id` FOREIGN KEY (`sport_type_id`) REFERENCES `sport_type` (`sport_type_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_sport_type_item_sport_id` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`sport_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='運動分類明細表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `custom_sport`
+--
+
+DROP TABLE IF EXISTS `custom_sport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `custom_sport` (
+  `custom_sport_id` int NOT NULL AUTO_INCREMENT COMMENT '自訂義運動ID',
+  `sport_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '運動名稱',
+  `sport_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動描述',
+  `sport_estimated_calories` int unsigned NOT NULL COMMENT '預估運動消耗熱量',
+  `sport_pic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '運動圖片',
+  `sport_data_status` tinyint NOT NULL COMMENT '運動資料狀態',
+  `user_id` int NOT NULL COMMENT '會員ID',
+  PRIMARY KEY (`custom_sport_id`),
+  KEY `fk_custom_sport_user_id` (`user_id`),
+  CONSTRAINT `fk_custom_sport_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='使用者自訂義運動項目表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
